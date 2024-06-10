@@ -35,11 +35,28 @@ namespace SeatMapService.Controllers
                 return BadRequest();
 
             _seatMapServerSentEventsService.AddToGroup(EventId.ToString(), client);
-            List<Guid> TicketIds = _redisCacheService.LockedTickets(EventId.ToString()+ ".([{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?)");
-
+            List<Guid> TicketIds = _redisCacheService.LockedTickets(EventId.ToString()+ ".*");
+            
             client.SendEventAsync(new ServerSentEvent() { Type = EventTypes.AllLockedTcikets,
-                Data =new List<string>() { [0] = System.Text.Json.JsonSerializer.Serialize(TicketIds) }
+                Data =new List<string>() { System.Text.Json.JsonSerializer.Serialize(TicketIds) }
                 });
+
+            return Ok();
+
+
+        }
+
+        [HttpGet("[action]/{cid}/{EventId}")]
+        public async Task<IActionResult> LeaveEvent(Guid cid, Guid EventId)
+        {
+
+            var client = _seatMapServerSentEventsService.GetClient(cid);
+
+            if (client == null)
+                return BadRequest();
+
+            _seatMapServerSentEventsService.RemoveFromGroup(EventId.ToString(), client);
+          
 
             return Ok();
 

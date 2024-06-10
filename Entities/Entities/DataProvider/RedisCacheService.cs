@@ -21,7 +21,7 @@ namespace Entities.DataProvider
         public List<Guid> LockedTickets(string ticketPatterns)
         {
 
-            return _redis.Multiplexer.GetServers()[0].Keys(pattern: ticketPatterns).Select(x => Guid.Parse(x.ToString().Split(":")[1])).ToList();
+            return _redis.Multiplexer.GetServers()[0].Keys(database:0,pattern: ticketPatterns).Select(x => Guid.Parse(x.ToString().Split(".")[1])).ToList();
 
         }
         

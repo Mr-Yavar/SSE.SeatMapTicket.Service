@@ -9,7 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{D5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{5690C8AB-FC91-4636-B329-600CF19FE2E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities\Entities.csproj", "{EFF5D556-D60A-4050-87D9-B8CFB249E8F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities\Entities.csproj", "{EFF5D556-D60A-4050-87D9-B8CFB249E8F1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.AspNetCore.ServerSentEvents", "G:\temporary\Lib.AspNetCore.ServerSentEvents-main\Lib.AspNetCore.ServerSentEvents\Lib.AspNetCore.ServerSentEvents.csproj", "{EA900614-518E-488E-9D68-33A9972CDE50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{EFF5D556-D60A-4050-87D9-B8CFB249E8F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFF5D556-D60A-4050-87D9-B8CFB249E8F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFF5D556-D60A-4050-87D9-B8CFB249E8F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA900614-518E-488E-9D68-33A9972CDE50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA900614-518E-488E-9D68-33A9972CDE50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA900614-518E-488E-9D68-33A9972CDE50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA900614-518E-488E-9D68-33A9972CDE50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

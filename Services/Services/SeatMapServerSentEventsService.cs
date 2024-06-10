@@ -48,7 +48,7 @@ namespace Services.Services
                                     string[] info = key.Split(".");
 
 
-                                    PublishLockedTicket(groupName: parts[0], Guid.Parse(parts[1]));
+                                    PublishLockedTicket(groupName: info[0], Guid.Parse(info[1]));
 
                                 }
 
@@ -66,7 +66,7 @@ namespace Services.Services
                                     string[] info = key.Split(".");
 
 
-                                    PublishUnLockedTicket(groupName: parts[0], Guid.Parse(parts[1]));
+                                    PublishUnLockedTicket(groupName: info[0], Guid.Parse(info[1]));
 
                                 }
                                 break;
@@ -90,6 +90,8 @@ namespace Services.Services
                 Data = new List<string> { res },
                 Type = EventTypes.UnLockedTciket,
             });
+
+            
         }
 
         /// <summary>
@@ -106,6 +108,8 @@ namespace Services.Services
                 Data = new List<string> { res },
                 Type = EventTypes.LockedTciket,
             });
+
+            
         }
 
         
