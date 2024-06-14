@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Entities\Entities\Entities.csproj" />
-    <ProjectReference Include="G:\temporary\Lib.AspNetCore.ServerSentEvents-main\Lib.AspNetCore.ServerSentEvents\Lib.AspNetCore.ServerSentEvents.csproj" />
+    <ProjectReference Include="..\Lib.AspNetCore.ServerSentEvents\Lib.AspNetCore.ServerSentEvents.csproj" />
   </ItemGroup>
 
 </Project>
