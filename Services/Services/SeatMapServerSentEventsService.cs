@@ -42,15 +42,15 @@ namespace Services.Services
                         switch(message)
                         {
                             case "set":
-                                if (key.Contains("."))
-                                {
+                                //if (key.Contains("."))
+                                //{
 
-                                    string[] info = key.Split(".");
+                                //    string[] info = key.Split(".");
 
 
-                                    PublishLockedTicket(groupName: info[0], Guid.Parse(info[1]));
+                                //    PublishLockedTicket(groupName: info[0], Guid.Parse(info[1]));
 
-                                }
+                                //}
 
 
                                //set commend
@@ -58,6 +58,7 @@ namespace Services.Services
                             case "expire":
                                //set command and update call it
                                 break;
+                            //case "del":
                             case "expired":
                                 //when it exipred
                                 if (key.Contains("."))

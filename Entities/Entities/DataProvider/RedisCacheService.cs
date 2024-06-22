@@ -29,11 +29,19 @@ namespace Entities.DataProvider
         {
             return _redis.KeyExists(key);
             
+            
         }
 
-        public void Remove(string key)
+
+        public bool AddKey<T>(string key,T data,TimeSpan cacheDuration) {
+            var jsonData = JsonSerializer.Serialize(data);
+           return  _redis.StringSet(key, jsonData, cacheDuration,true);
+        }
+
+        public bool Remove(string key)
         {
-             _cache.Remove(key);
+            return _redis.KeyDelete(key);
+            
         }
 
         public T GetCachedData<T>(string key)
@@ -50,7 +58,8 @@ namespace Entities.DataProvider
 
             var options = new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = cacheDuration
+                AbsoluteExpirationRelativeToNow = cacheDuration,
+                
             };
 
             if (cacheDuration == TimeSpan.Zero)

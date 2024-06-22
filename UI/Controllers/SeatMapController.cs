@@ -35,11 +35,13 @@ namespace SeatMapService.Controllers
                 return BadRequest();
 
             _seatMapServerSentEventsService.AddToGroup(EventId.ToString(), client);
-            List<Guid> TicketIds = _redisCacheService.LockedTickets(EventId.ToString()+ ".*");
-            
-            client.SendEventAsync(new ServerSentEvent() { Type = EventTypes.AllLockedTcikets,
-                Data =new List<string>() { System.Text.Json.JsonSerializer.Serialize(TicketIds) }
-                });
+            List<Guid> TicketIds = _redisCacheService.LockedTickets(EventId.ToString() + ".*");
+
+            await client.SendEventAsync(new ServerSentEvent()
+            {Id = Guid.NewGuid().ToString(),
+                Type = EventTypes.AllLockedTcikets,
+                Data = new List<string>() { System.Text.Json.JsonSerializer.Serialize(TicketIds) }
+            });
 
             return Ok();
 
@@ -56,7 +58,7 @@ namespace SeatMapService.Controllers
                 return BadRequest();
 
             _seatMapServerSentEventsService.RemoveFromGroup(EventId.ToString(), client);
-          
+
 
             return Ok();
 
@@ -64,22 +66,22 @@ namespace SeatMapService.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> LockTickets(Guid EventId,List<Guid> TicketIds)
+        public async Task<IActionResult> LockTickets(Guid EventId, List<Guid> TicketIds)
         {
 
-         
+
             string key = "";
             bool isOk = true;
             foreach (var ticket in TicketIds)
             {
-                key = "Ticket_" + EventId.ToString() + "_" + ticket.ToString();
+                key = EventId.ToString() + "." + ticket.ToString();
 
                 if (_redisCacheService.IsExist(key))
                 {
                     isOk = false;
                 }
-                    
-               
+
+
             }
 
             if (isOk)
@@ -87,23 +89,51 @@ namespace SeatMapService.Controllers
 
                 foreach (var ticket in TicketIds)
                 {
-                    key = "Ticket_" + EventId.ToString() + "_" + ticket.ToString();
-                    _redisCacheService.SetCachedData<TimeSpan>(key, TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(15));
+                    key = EventId.ToString() + "." + ticket.ToString();
+                    _redisCacheService.AddKey<string>(key, "", TimeSpan.FromMinutes(15));
                 }
-
+                string res = System.Text.Json.JsonSerializer.Serialize<MessageDto<List<Guid>>>(value: new() { Message = TicketIds });
+                await _seatMapServerSentEventsService.SendEventAsync(EventId.ToString(), new ServerSentEvent()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Data = new List<string> { res },
+                    Type = EventTypes.LockedTciket,
+                });
                 return Ok();
             }
             else
             {
                 return BadRequest();
             }
-
-
-
-
-
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UnLockTickets(Guid EventId, List<Guid> TicketIds)
+        {
+            string key = "";
+            bool isOk = true;
+            foreach (var ticket in TicketIds)
+            {
+                key = EventId.ToString() + "." + ticket.ToString();
+
+                if (_redisCacheService.IsExist(key))
+                {
+                    _redisCacheService.Remove(EventId.ToString() + "." + ticket.ToString());
+                }
+
+
+            }
+
+            string res = System.Text.Json.JsonSerializer.Serialize<MessageDto<List<Guid>>>(value: new() { Message = TicketIds });
+            await _seatMapServerSentEventsService.SendEventAsync(EventId.ToString(), new ServerSentEvent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Data = new List<string> { res },
+                Type = EventTypes.UnLockedTciket,
+            });
+            return Ok();
+
+        }
 
         [HttpGet("[action]/{Cid}")]
         public async Task<IActionResult> GetClient(Guid Cid)
@@ -142,17 +172,13 @@ namespace SeatMapService.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UnLockTickets()
-        {
-            return Ok();
-        }
+
 
         [HttpGet("[action]/{Cid}/{eventName}/{message}")]
-        public IActionResult sendEvent(Guid Cid,string eventName,string message)
+        public IActionResult sendEvent(Guid Cid, string eventName, string message)
         {
             var client = _seatMapServerSentEventsService.GetClient(Cid);
-            client.SendEventAsync(new ServerSentEvent() { Type = eventName,Data = message.Split(',').ToList() });
+            client.SendEventAsync(new ServerSentEvent() { Type = eventName, Data = message.Split(',').ToList() });
 
             return Ok();
         }

@@ -19,11 +19,11 @@ namespace SeatMapService
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
   
-            builder.Services.AddCors(options => options.AddDefaultPolicy(o => o.AllowAnyOrigin()));
+            builder.Services.AddCors(options => options.AddDefaultPolicy(o => o.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             builder.Services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = builder.Configuration.GetConnectionString("RedisConn");
-                options.InstanceName = "GamesCatalog_";
+                options.InstanceName = "";
             });
 
             
