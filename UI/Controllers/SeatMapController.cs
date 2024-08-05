@@ -43,7 +43,12 @@ namespace SeatMapService.Controllers
                 Data = new List<string>() { System.Text.Json.JsonSerializer.Serialize(TicketIds) }
             });
 
-            return Ok();
+            return Ok(new ServerSentEvent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Type = EventTypes.AllLockedTcikets,
+                Data = new List<string>() { System.Text.Json.JsonSerializer.Serialize(TicketIds) }
+            });
 
 
         }
@@ -99,11 +104,11 @@ namespace SeatMapService.Controllers
                     Data = new List<string> { res },
                     Type = EventTypes.LockedTciket,
                 });
-                return Ok();
+                return Ok(new { });
             }
             else
             {
-                return BadRequest();
+                return BadRequest(new() { });
             }
         }
 
