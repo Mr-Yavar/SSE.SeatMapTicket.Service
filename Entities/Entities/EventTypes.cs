@@ -10,7 +10,7 @@ namespace Entities
     {
         public static string LockedTciket = "Locked_Ticket";
         public static string AllLockedTcikets = "All_Locked_Tickets";
-
+        public static string ReservedTcikets = "Reserved_Tickets";
         public static string UnLockedTciket = "UnLocked_Ticket";
 
     }

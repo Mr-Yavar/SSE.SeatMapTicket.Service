@@ -70,6 +70,21 @@ namespace SeatMapService.Controllers
 
         }
 
+
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ReservedTickets(Guid EventId, List<Guid> TicketIds)
+        {
+            string res = System.Text.Json.JsonSerializer.Serialize<MessageDto<List<Guid>>>(value: new() { Message = TicketIds });
+            await _seatMapServerSentEventsService.SendEventAsync(EventId.ToString(), new ServerSentEvent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Data = new List<string> { res },
+                Type = EventTypes.ReservedTcikets,
+            });
+            return Ok(new { });
+        }
+
         [HttpPost("[action]")]
         public async Task<IActionResult> LockTickets(Guid EventId, List<Guid> TicketIds)
         {
