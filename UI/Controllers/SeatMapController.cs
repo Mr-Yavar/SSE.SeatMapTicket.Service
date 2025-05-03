@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Entities;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace SeatMapService.Controllers
 {
@@ -75,13 +76,30 @@ namespace SeatMapService.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> ReservedTickets(Guid EventId, List<Guid> TicketIds)
         {
+            
+            
             string res = System.Text.Json.JsonSerializer.Serialize<MessageDto<List<Guid>>>(value: new() { Message = TicketIds });
+
+
+
             await _seatMapServerSentEventsService.SendEventAsync(EventId.ToString(), new ServerSentEvent()
             {
                 Id = Guid.NewGuid().ToString(),
                 Data = new List<string> { res },
                 Type = EventTypes.ReservedTcikets,
             });
+
+            foreach (var ticket in TicketIds)
+            {
+                string key = EventId.ToString() + "." + ticket.ToString();
+
+                if (_redisCacheService.IsExist(key))
+                {
+                    _redisCacheService.Remove(EventId.ToString() + "." + ticket.ToString());
+                }
+
+            }
+
             return Ok(new { });
         }
 
