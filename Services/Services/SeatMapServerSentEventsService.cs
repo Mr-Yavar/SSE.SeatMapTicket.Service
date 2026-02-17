@@ -42,6 +42,7 @@ namespace Services.Services
                         switch(message)
                         {
                             case "set":
+                                // it does not need to notify other users bc of this happens in locking request
                                 //if (key.Contains("."))
                                 //{
 
